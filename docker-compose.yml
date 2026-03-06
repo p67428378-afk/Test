@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  auth-service:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/auth_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SECRET_KEY: super-secret-key-for-session-management # Replace with a strong, random key in production
+      # Email service environment variables (for password reset)
+      EMAIL_HOST: smtp.example.com
+      EMAIL_PORT: 587
+      EMAIL_USERNAME: your_email@example.com
+      EMAIL_PASSWORD: your_email_password
+      EMAIL_FROM: no-reply@example.com
+    depends_on:
+      - db
+      - redis
+    # Mount the current directory into the container for live reloading during development
+    volumes:
+      - .:/app
+
+volumes:
+  db_data:
