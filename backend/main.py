@@ -2,8 +2,14 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
 
+from . import models
+from .database import engine
+
 # Load environment variables from .env file
 load_dotenv()
+
+# Create all tables in the database
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Guest Room Booking API",
@@ -15,11 +21,16 @@ app = FastAPI(
 async def read_root():
     return {"message": "Welcome to the Guest Room Booking API"}
 
-# Placeholder for including other routers (e.g., search, booking, payment)
-# from .routers import search, booking, payment
-# app.include_router(search.router)
-# app.include_router(booking.router)
-# app.include_router(payment.router)
+# Including other routers
+from .routers import users, hotels, room_types, rooms, bookings, payments, search
+
+app.include_router(users.router)
+app.include_router(hotels.router)
+app.include_router(room_types.router)
+app.include_router(rooms.router)
+app.include_router(bookings.router)
+app.include_router(payments.router)
+app.include_router(search.router)
 
 if __name__ == "__main__":
     import uvicorn
