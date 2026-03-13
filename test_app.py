@@ -1,7 +1,7 @@
 import os
 import unittest
-from app import create_app, db
-from app.models import Room, RoomStatus, RoomStatusLog
+from app import create_app
+from app.models import db, Room, RoomStatus, RoomStatusLog
 from app.services import initialize_room_statuses, create_initial_rooms
 
 class RoomStatusTestCase(unittest.TestCase):
