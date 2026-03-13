@@ -1,14 +1,7 @@
 from flask import Blueprint, jsonify, request
-from .services import get_all_rooms, get_room_by_id, update_room_status, initialize_room_statuses, create_initial_rooms
-from .models import db
+from .services import get_all_rooms, get_room_by_id, update_room_status
 
 room_bp = Blueprint('room_bp', __name__)
-
-@room_bp.before_app_first_request
-def setup_data():
-    with db.session.begin():
-        initialize_room_statuses()
-        create_initial_rooms()
 
 @room_bp.route('/rooms', methods=['GET'])
 def list_rooms():
