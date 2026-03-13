@@ -15,6 +15,9 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        from .services import initialize_room_statuses, create_initial_rooms
+        initialize_room_statuses()
+        create_initial_rooms()
 
         from .routes import room_bp
         app.register_blueprint(room_bp)
