@@ -134,5 +134,64 @@ def get_employment_details(customer_id):
     finally:
         session.close()
 
+# Loan Service API
+@app.route('/customers/<int:customer_id>/loan-applications', methods=['POST'])
+def create_loan_application(customer_id):
+    session = Session()
+    try:
+        customer = session.query(Customer).filter_by(id=customer_id).first()
+        if not customer:
+            return jsonify({'error': 'Customer not found'}), 404
+
+        data = request.get_json()
+        required_fields = ['purpose', 'loan_amount']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'{field} is required'}), 400
+
+        loan_amount = data['loan_amount']
+        if not isinstance(loan_amount, (int, float)) or not (1000 <= loan_amount <= 50000):
+            return jsonify({'error': 'Loan amount must be between $1,000 and $50,000'}), 400
+
+        new_loan_application = LoanApplication(
+            customer_id=customer_id,
+            purpose=data['purpose'],
+            loan_amount=loan_amount,
+            application_status='Pending',
+            submission_date=datetime.utcnow()
+        )
+        session.add(new_loan_application)
+        session.commit()
+        return jsonify({'message': 'Loan application created successfully', 'application_id': new_loan_application.id}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/customers/<int:customer_id>/loan-applications', methods=['GET'])
+def get_loan_applications(customer_id):
+    session = Session()
+    try:
+        loan_applications = session.query(LoanApplication).filter_by(customer_id=customer_id).all()
+        if not loan_applications:
+            return jsonify({'message': 'No loan applications found for this customer'}), 404
+
+        result = []
+        for app in loan_applications:
+            result.append({
+                'id': app.id,
+                'customer_id': app.customer_id,
+                'purpose': app.purpose,
+                'loan_amount': app.loan_amount,
+                'application_status': app.application_status,
+                'submission_date': app.submission_date.strftime('%Y-%m-%d')
+            })
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
