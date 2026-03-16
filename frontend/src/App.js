@@ -3,6 +3,7 @@ import './App.css';
 import PersonalInformationForm from './components/PersonalInformationForm';
 import EmploymentDetailsForm from './components/EmploymentDetailsForm';
 import LoanRequestForm from './components/LoanRequestForm';
+import ReviewAndSubmitForm from './components/ReviewAndSubmitForm';
 
 function App() {
   const [step, setStep] = useState(1);
@@ -39,6 +40,28 @@ function App() {
     setStep((prevStep) => prevStep - 1);
   };
 
+  const handleFinalSubmit = () => {
+    alert('Application submitted successfully!');
+    // Optionally reset form or navigate to a confirmation page
+    setFormData({
+      fullName: '',
+      dob: '',
+      ssn: '',
+      address: '',
+      contactInfo: '',
+      citizenshipStatus: '',
+      hasPendingLegalCases: false,
+      employerName: '',
+      employerAddress: '',
+      jobTitle: '',
+      annualIncome: '',
+      employmentHistory: '',
+      loanPurpose: '',
+      loanAmount: '',
+    });
+    setStep(1);
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -69,14 +92,11 @@ function App() {
         );
       case 4:
         return (
-          <div className="container">
-            <h2 className="text-center">Review and Submit</h2>
-            <p>Review and submit form will go here.</p>
-            <div className="button-group">
-              <button className="secondary" onClick={prevStep}>Back</button>
-              <button className="primary" onClick={nextStep}>Submit</button>
-            </div>
-          </div>
+          <ReviewAndSubmitForm
+            formData={formData}
+            prevStep={prevStep}
+            handleSubmit={handleFinalSubmit}
+          />
         );
       default:
         return null;
