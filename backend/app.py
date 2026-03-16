@@ -193,5 +193,62 @@ def get_loan_applications(customer_id):
     finally:
         session.close()
 
+# Document Upload Service API (Placeholder)
+@app.route('/customers/<int:customer_id>/documents', methods=['POST'])
+def upload_document(customer_id):
+    session = Session()
+    try:
+        customer = session.query(Customer).filter_by(id=customer_id).first()
+        if not customer:
+            return jsonify({'error': 'Customer not found'}), 404
+
+        # In a real application, this would handle file uploads to GCS
+        # For now, it's a placeholder to demonstrate the API structure
+        data = request.get_json()
+        required_fields = ['document_type', 'file_path']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'{field} is required'}), 400
+
+        new_document = Document(
+            customer_id=customer_id,
+            loan_application_id=data.get('loan_application_id'),
+            document_type=data['document_type'],
+            file_path=data['file_path'], # This would be a GCS URL or similar
+            upload_date=datetime.utcnow()
+        )
+        session.add(new_document)
+        session.commit()
+        return jsonify({'message': 'Document uploaded (placeholder)', 'document_id': new_document.id}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/customers/<int:customer_id>/documents', methods=['GET'])
+def get_documents(customer_id):
+    session = Session()
+    try:
+        documents = session.query(Document).filter_by(customer_id=customer_id).all()
+        if not documents:
+            return jsonify({'message': 'No documents found for this customer'}), 404
+
+        result = []
+        for doc in documents:
+            result.append({
+                'id': doc.id,
+                'customer_id': doc.customer_id,
+                'loan_application_id': doc.loan_application_id,
+                'document_type': doc.document_type,
+                'file_path': doc.file_path,
+                'upload_date': doc.upload_date.strftime('%Y-%m-%d')
+            })
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
