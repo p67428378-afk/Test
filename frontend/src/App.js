@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import PersonalInformationForm from './components/PersonalInformationForm';
 import EmploymentDetailsForm from './components/EmploymentDetailsForm';
+import LoanRequestForm from './components/LoanRequestForm';
 
 function App() {
   const [step, setStep] = useState(1);
@@ -59,14 +60,12 @@ function App() {
         );
       case 3:
         return (
-          <div className="container">
-            <h2 className="text-center">Loan Request</h2>
-            <p>Loan request form will go here.</p>
-            <div className="button-group">
-              <button className="secondary" onClick={prevStep}>Back</button>
-              <button className="primary" onClick={nextStep}>Next</button>
-            </div>
-          </div>
+          <LoanRequestForm
+            formData={formData}
+            handleChange={handleChange}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
         );
       case 4:
         return (
