@@ -1,35 +1,30 @@
-# General ignores
-.DS_Store
-.env
-
-# Python ignores
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
-*.pyo
 *.pyd
-.Python
-env/
+*.pyo
+
+# Virtual environment
+virtualenv/
+virt/
+vane/
 venv/
-*.egg-info/
-.tox/
-.coverage
-.pytest_cache/
+.venv/
 
-# Node ignores
-node_modules/
-build/
-.parcel-cache/
-dist/
-
-# IDE ignores
-.idea/
+# Editor directories and files
 .vscode/
-
-# OS generated files
+.idea/
+*.swp
+*~
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+
+# Environment variables
+.env
+.flaskenv
+
+# Database
+*.db
+*.sqlite
+
+# Uploaded documents (if stored locally during development)
+uploads/
