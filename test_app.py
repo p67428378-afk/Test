@@ -2,6 +2,7 @@ import pytest
 from app import create_app, db
 from app.models import Applicant, LoanApplication, Document
 import json
+import io
 
 @pytest.fixture
 def client():
@@ -22,10 +23,7 @@ def test_submit_application_success(client):
         'loan_amount': '10000',
         'loan_term_months': '36'
     }
-    # Flask test client requires files to be passed as a tuple (file_stream, filename)
-    # For simplicity, we'll simulate an empty file for now.
-    # In a real test, you'd create a BytesIO object with actual file content.
-    files = {'id_proof': (b'fake_id_content', 'id_proof.pdf')}
+    files = {'id_proof': (io.BytesIO(b'fake_id_content'), 'id_proof.pdf', 'application/pdf')}
 
     response = client.post('/applications', data=data, content_type='multipart/form-data', files=files)
     assert response.status_code == 201
@@ -50,7 +48,7 @@ def test_get_application_status(client):
         'loan_amount': '5000',
         'loan_term_months': '12'
     }
-    files = {'bank_statement': (b'fake_bank_content', 'bank_statement.pdf')}
+    files = {'bank_statement': (io.BytesIO(b'fake_bank_content'), 'bank_statement.pdf', 'application/pdf')}
     post_response = client.post('/applications', data=data, content_type='multipart/form-data', files=files)
     post_response_data = json.loads(post_response.data)
     reference_number = post_response_data['reference_number']
