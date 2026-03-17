@@ -1,49 +1,72 @@
-# Online Personal Loan Application
+# Loan Application Platform Backend
 
-This project implements an online personal loan application system, consisting of a frontend web application and a backend API.
+This project implements the backend services for a Loan Application Platform, focusing on loan application submission, status tracking, and document management, as defined in Jira issue SCRUM-57 and its associated High-Level Design (HLD).
 
-## Project Structure
+## Architecture Overview
 
-- `frontend/`: Contains the React-based web application for loan applications.
-- `backend/`: Contains the Python Flask API for processing loan applications, managing user data, and integrating with external services.
+The system is designed with a microservices architecture, leveraging AWS services for deployment. Key components include:
+- **Loan Application Service**: Manages the lifecycle of loan applications.
+- **Document Management Service**: Handles secure upload, storage, and retrieval of supporting documents.
 
 ## Setup and Installation
 
-Follow the instructions in the `frontend/README.md` and `backend/README.md` for detailed setup and running instructions for each part of the application.
+### Prerequisites
+- Python 3.8+
+- pip (Python package installer)
+- Docker (optional, for containerized deployment)
 
-## Features
+### Local Development
 
-- Secure capture and validation of personal information.
-- Collection and verification of employment details.
-- Specification of loan request details with constraints.
-- Gathering of legal and citizenship information.
-- Application submission and immediate confirmation.
-- Integration with third-party services for identity verification, credit scoring, and income verification (planned).
-- Secure handling of sensitive data (encryption, audit trails).
-- User-friendly, responsive web form for application.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/p67428378-afk/Test.git
+    cd Test
+    git checkout ISSUE-SCRUM-57
+    ```
 
-## Technologies
+2.  **Create a virtual environment:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
 
-**Frontend:**
-- React
-- HTML/CSS
-- JavaScript
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-**Backend:**
-- Python
-- Flask
-- SQLAlchemy (ORM)
-- PostgreSQL (Database)
+4.  **Configure environment variables:**
+    Create a `.env` file in the root directory based on `config.py` and populate it with necessary values (e.g., database connection string, S3 bucket details).
 
-## Deployment
+5.  **Run the application:**
+    ```bash
+    flask run
+    ```
+    The application will typically run on `http://127.0.0.1:5000`.
 
-The application is designed for deployment on Google Cloud Platform (GCP) using microservices architecture, Docker, and Kubernetes (GKE).
+## API Endpoints
 
-## Security
+(To be detailed as endpoints are implemented)
 
-- HTTPS/SSL for all data in transit.
-- Encryption at rest for sensitive data (SSN, income).
-- Role-based access control (RBAC).
-- Multi-Factor Authentication (MFA) for internal users.
-- Regular security audits and penetration testing.
-- Compliance with relevant financial regulations (GDPR, CCPA, GLBA).
+## Project Structure
+
+```
+.
+├── README.md
+├── requirements.txt
+├── config.py
+├── .gitignore
+├── Dockerfile
+└── app/
+    ├── __init__.py
+    ├── main.py
+    ├── models.py
+    └── services/
+        ├── __init__.py
+        ├── loan_service.py
+        └── document_service.py
+```
+
+## HLD Reference
+
+The High-Level Design document can be found at: [https://bfsi-na-ai-engineering.atlassian.net/wiki/spaces/SCRUM1/pages/14712834](https://bfsi-na-ai-engineering.atlassian.net/wiki/spaces/SCRUM1/pages/14712834)
