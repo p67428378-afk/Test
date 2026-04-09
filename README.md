@@ -1,49 +1,126 @@
-# Online Personal Loan Application
+# Vehicle Insurance Premium Calculator
 
-This project implements an online personal loan application system, consisting of a frontend web application and a backend API.
+This project is a vehicle insurance premium calculator that allows users to calculate their vehicle insurance premium based on various factors.
+
+## Application Architecture
+
+- **Tech Stack**: FastAPI, React, PostgreSQL
+- **High-level component diagram**:
+
+```mermaid
+graph TD;
+    A[Frontend] --> B{API Gateway};
+    B --> C[Premium Calculation Service];
+    C --> D[Policy Database];
+```
+
+- **Frontend and Backend Communication**: The frontend communicates with the backend via a RESTful API. The API is served at `/api/v1/insurance`.
+- **Database Schema**: The database schema consists of a single table `policies` with the following columns:
+    - `policyId` (String, Primary Key)
+    - `baseRate` (Float)
+    - `ncbTier` (String)
+    - `ncbDiscount` (Float)
+    - `vehicleMultiplier` (Float)
+    - `finalPremium` (Float)
+    - `vehicleDetails` (JSON)
+    - `customerDetails` (JSON)
+    - `createdAt` (DateTime)
+    - `updatedAt` (DateTime)
 
 ## Project Structure
 
-- `frontend/`: Contains the React-based web application for loan applications.
-- `backend/`: Contains the Python Flask API for processing loan applications, managing user data, and integrating with external services.
+```
+.
+├── backend
+│   ├── app.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   └── database.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   └── policy.py
+│   ├── routers
+│   │   ├── __init__.py
+│   │   └── insurance.py
+│   ├── schemas
+│   │   ├── __init__.py
+│   │   └── policy.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   └── premium_calculator_service.py
+│   └── tests
+│       ├── __init__.py
+│       ├── test_insurance_api.py
+│       └── test_premium_calculator_service.py
+└── frontend
+    ├── index.html
+    ├── package.json
+    ├── postcss.config.js
+    ├── src
+    │   ├── App.jsx
+    │   ├── components
+    │   │   ├── EstimatedPremiumDisplay.jsx
+    │   │   ├── Footer.jsx
+    │   │   ├── Header.jsx
+    │   │   ├── MainContent.jsx
+    │   │   ├── SideNavBar.jsx
+    │   │   └── VehicleDetailsForm.jsx
+    │   ├── index.css
+    │   └── main.jsx
+    ├── tailwind.config.js
+    └── vite.config.js
+```
 
-## Setup and Installation
+## Prerequisites
 
-Follow the instructions in the `frontend/README.md` and `backend/README.md` for detailed setup and running instructions for each part of the application.
+- Python 3.10+
+- Node.js 18+
+- npm
+- git
 
-## Features
+## Setup Instructions
 
-- Secure capture and validation of personal information.
-- Collection and verification of employment details.
-- Specification of loan request details with constraints.
-- Gathering of legal and citizenship information.
-- Application submission and immediate confirmation.
-- Integration with third-party services for identity verification, credit scoring, and income verification (planned).
-- Secure handling of sensitive data (encryption, audit trails).
-- User-friendly, responsive web form for application.
+### Backend
 
-## Technologies
+1.  Create a virtual environment: `python -m venv venv`
+2.  Activate the virtual environment: `source venv/bin/activate`
+3.  Install the dependencies: `pip install -r backend/requirements.txt`
+4.  Run the application: `uvicorn backend.app:app --reload`
 
-**Frontend:**
-- React
-- HTML/CSS
-- JavaScript
+### Frontend
 
-**Backend:**
-- Python
-- Flask
-- SQLAlchemy (ORM)
-- PostgreSQL (Database)
+1.  Install the dependencies: `npm install`
+2.  Run the application: `npm run dev`
 
-## Deployment
+## API Documentation
 
-The application is designed for deployment on Google Cloud Platform (GCP) using microservices architecture, Docker, and Kubernetes (GKE).
+### Calculate Premium
 
-## Security
+- **Endpoint**: `POST /api/v1/insurance/premium/calculate`
+- **Request Body**:
 
-- HTTPS/SSL for all data in transit.
-- Encryption at rest for sensitive data (SSN, income).
-- Role-based access control (RBAC).
-- Multi-Factor Authentication (MFA) for internal users.
-- Regular security audits and penetration testing.
-- Compliance with relevant financial regulations (GDPR, CCPA, GLBA).
+```json
+{
+  "baseRate": 500,
+  "ncbTier": "Tier 1",
+  "vehicleMultiplier": 1.2
+}
+```
+
+- **Response**:
+
+```json
+{
+  "premium": 480
+}
+```
+
+## Running Tests
+
+### Backend
+
+`pytest backend/tests`
+
+### Frontend
+
+`npm test`
